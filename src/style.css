@@ -54,6 +54,8 @@ header {
 
 #new-project-button {
     background-color: green;
+    width: auto;
+    height: auto;
     color: var(--nav-color);
     font-weight: bold;
     padding: 0.5rem 1rem;
@@ -107,13 +109,15 @@ header {
 }
 
 #content-wrapper {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #content {
+    overflow: hidden;
     
     padding: 2em;
     width:100%;
+    max-height: calc(100vh - 100px);
     /* background-color: lightpink; */
 }
 
@@ -179,27 +183,40 @@ header {
     flex-wrap: nowrap;
     justify-content: space-around;
     /* background-color: green; */
-    overflow: auto;
+    /* overflow: auto; */
     padding: 10px 20px;
     gap: 20px;
  }
 
  #status-columns>div {
     flex:1 0 250px;
-    max-width: 350px;
+    max-width: 33%;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    max-height: 400px;
     /* background-color: white; */
  }
 
- #all-todo>.newTodo {
+ #status-columns .todo {
+    width: calc(100% - 20px);
+ }
+
+ #all-todo, #all-projects {
+    overflow: auto;
+    max-height: inherit;
+    padding: 10px;
+ }
+
+ #all-todo>.newTodo, #all-projects>.new-project  {
     height: 200px;
     align-content: center;
  }
 
- #all-todo>.todo {
+ #all-todo>.todo, #all-projects>.project {
     width: 100%;
  }
 
- .newTodo {
+ .newTodo, .new-project {
     background-color: transparent;
     color: var(--chosen-color-main);
     /* margin-top: 1em; */
@@ -213,35 +230,36 @@ header {
 
 
 
- .newTodo:hover {
-    transform: scale(1.2);
+ .newTodo:hover, .new-project:hover {
+    transform: scale(1.05);
  }
 
- .todo {
+ .todo, .project {
     display: grid;
     min-height: 200px;
     grid-template-rows: max-content 1fr;
     background-color: var(--nav-color);
-    gap: 2px;
+    gap: 1em;
     border-radius: 0.5em;
     /* border: 2px solid black; */
     box-shadow: 0px 0px 3px var(--chosen-color-main);
     transition: transform .2s; 
-    margin: 0 auto;
+    margin: 1em auto;
     padding: 10px;
     transform: rotate(0deg);
+    text-align: start;
 
  }
 
- .todo:hover {
+ .todo:hover, .project:hover {
     transform: scale(1.05);
  }
 
- .todo>* {
+ .todo>* , .project>*{
     background-color: transparent;
  }
 
- .todo-title {
+ .todo-title, .project-title {
     border-bottom: 5px solid var(--chosen-color-main);
     font-size: 1.5em;
     display: flex;
@@ -264,7 +282,7 @@ header {
     
  }
 
- .todo>.edit-button:hover {
+ .todo>.edit-button:hover , .project>.edit-button:hover {
     background-color: yellow;
     opacity:1;
  }
@@ -285,15 +303,20 @@ header {
     
  }
 
- .todo:hover>button {
+ .todo:hover>button, .project:hover>button {
     opacity: 0.5;
  }
 
- .todo>.complete-button:hover {
+ .todo>.complete-button:hover, .project>.complete-button:hover {
     background-color: green;
     opacity:1;
  }
 
  .delete-button:hover {
     color: red;
+ }
+
+
+ .completed {
+   text-decoration: line-through;
  }

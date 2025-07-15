@@ -1,46 +1,11 @@
 import { statusListToDo } from "./objects";
-//<div id="status-columns">
-    //</div><div id="new">
-    //</div>    <h2>New</h2>
-    //</div>    <button class="newTodo" data-status="new">+ Create New</button>
-    //</div>    <div class="todo">
-    //</div>        <div class="todo-title">
-    //</div>            <h3>Test Todo</h3>
-    //</div>            <div class="delete-button" data-uid="test123">X</div>
-    //</div>        </div>
-    //</div>        <div>Some pretty text, lalalalalalala!!!!</div>
-    //</div>        <button class="edit-button" data-uid="test123">edit</button>
-    //</div>        <button class="complete-button" data-uid="test123">complete</button>
-    //</div>    </div>
-    //</div></div>
-    //</div><div id="in-progress">
-    //</div>    <h2>In-Progress</h2>
-    //</div>    <button class="newTodo" data-status="in-progress">+ Create New</button>
-    //</div></div>
-    //</div><div id="done">
-    //</div>    <h2>Done</h2>
-    //</div>    <button class="newTodo" data-status="done">+ Create New</button>
-    //</div></div>
 
 function displayFullProject(project){
-    const statusColumns = document.createElement("div");
-    statusColumns.id = "status-columns";
-    const newButton = document.createElement("button");
-    newButton.classList.add("newTodo");
-    newButton.textContent = "+ Create New";
-    for(let i = 0; i < statusListToDo.length; i++){
-        const statusDiv = document.createElement("div");
-        statusDiv.id = statusListToDo[i].toLowerCase();
-        const header2 = document.createElement("h2");
-        header2.textContent = statusListToDo[i].toUpperCase();
-        newButton.setAttribute("data-status", statusListToDo[i]);
-        //set up a query for all todos linked to project, then a for loop to display them all
-
-
-    }
+    
 
     // create elements for project header
     const content = document.getElementById("content");
+    content.textContent = "";
     const header = document.createElement("div");
     header.id = "project-header";
     const title = document.createElement("h1");
@@ -62,10 +27,148 @@ function displayFullProject(project){
     closed.textContent = `ToDos Completed: ${project.completedToDos}`;
     header.append(title, description, status, uID, open, closed);
 
-    //create elements for todo columns
+    // Status Columns
+    const statusColumns = document.createElement("div");
+    statusColumns.id = "status-columns";
+    const newButton = document.createElement("button");
+    newButton.classList.add("newTodo", "button");
+    newButton.textContent = "+ Create New";
+    for(let i = 0; i < statusListToDo.length; i++){
+        const statusDiv = document.createElement("div");
+        statusDiv.id = statusListToDo[i].toLowerCase();
+        const header2 = document.createElement("h2");
+        header2.textContent = statusListToDo[i].toUpperCase();
+        const currentButton = newButton.cloneNode(true);
+        currentButton.setAttribute("data-status", statusListToDo[i]);
+        statusDiv.append(header2, currentButton);
+        //find and list out all project's todos for given status
+        const matchingTodos = project.todoArray.filter((todo)=>todo.status === statusListToDo[i]);
+        console.log(matchingTodos);
+        for(let k = 0; k < matchingTodos.length; k++){
+            const todoItem = document.createElement("div");
+            todoItem.classList.add("todo");
+            //title section
+            const todoTitle = document.createElement("div");
+            todoTitle.classList.add("todo-title");
+            const header3 = document.createElement("h3");
+            // header3.textContent = project.todoArray[k].title;
+            header3.textContent = matchingTodos[k].title;
+            const deleteButton = document.createElement("div");
+            deleteButton.classList.add("delete-button", "button");
+            deleteButton.textContent = "X";
+            deleteButton.setAttribute("data-uid", matchingTodos[k].uniqueID);
+            todoTitle.append(header3, deleteButton);
+            //body section
+            const descDiv = document.createElement("div");
+            descDiv.textContent = matchingTodos[k].description;
+            const editButton = document.createElement("button");
+            editButton.classList.add("edit-button", "button");
+            editButton.setAttribute("data-uid", matchingTodos[k].uniqueID);
+            editButton.textContent = "edit";
+            const completeButton = document.createElement("button");
+            completeButton.classList.add("complete-button", "button");
+            completeButton.setAttribute("data-uid", matchingTodos[k].uniqueID);
+            completeButton.textContent = "complete";
 
-    content.appendChild(header);
+            todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            statusDiv.appendChild(todoItem);
+
+        }
+
+        statusColumns.appendChild(statusDiv);
+    }
+    //end for loops
+    content.append(header, statusColumns);
 }
 
 
-export {displayFullProject};
+function displayAllToDos(database){
+    const content = document.getElementById("content");
+    content.textContent = "";
+    const allTodo = document.createElement("div");
+    allTodo.id = "all-todo";
+    allTodo.classList.add("grid-general");
+    const newButton = document.createElement("button");
+    newButton.classList.add("newTodo", "button");
+    newButton.textContent = "+ Create New";
+    newButton.setAttribute("data-status", "new");
+    allTodo.appendChild(newButton);
+
+    const matchingTodos = database.todoArray;
+        for(let i = 0; i < matchingTodos.length; i++){
+            const todoItem = document.createElement("div");
+            todoItem.classList.add("todo");
+            //title section
+            const todoTitle = document.createElement("div");
+            todoTitle.classList.add("todo-title");
+            const header3 = document.createElement("h3");
+            header3.textContent = database.todoArray[i].title;
+            const deleteButton = document.createElement("div");
+            deleteButton.classList.add("delete-button", "button");
+            deleteButton.textContent = "X";
+            deleteButton.setAttribute("data-uid", database.todoArray[i].uniqueID);
+            todoTitle.append(header3, deleteButton);
+            //body section
+            const descDiv = document.createElement("div");
+            descDiv.textContent = database.todoArray[i].description;
+            const editButton = document.createElement("button");
+            editButton.classList.add("edit-button", "button");
+            editButton.setAttribute("data-uid", database.todoArray[i].uniqueID);
+            editButton.textContent = "edit";
+            const completeButton = document.createElement("button");
+            completeButton.classList.add("complete-button", "button");
+            completeButton.setAttribute("data-uid", database.todoArray[i].uniqueID);
+            completeButton.textContent = "complete";
+
+            todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            allTodo.appendChild(todoItem);
+        }
+        content.appendChild(allTodo);
+}
+
+
+function displayAllProjects(database){
+    const content = document.getElementById("content");
+    content.textContent = "";
+    const allProjects = document.createElement("div");
+    allProjects.id = "all-projects";
+    allProjects.classList.add("grid-general");
+    const newButton = document.createElement("button");
+    newButton.classList.add("new-project", "button");
+    newButton.textContent = "+ Create New";
+    newButton.setAttribute("data-status", "new");
+    allProjects.appendChild(newButton);
+
+    const projects = database.projectArray;
+        for(let i = 0; i < projects.length; i++){
+            const projectItem = document.createElement("div");
+            projectItem.classList.add("project");
+            //title section
+            const projectTitle = document.createElement("div");
+            projectTitle.classList.add("project-title");
+            const header3 = document.createElement("h3");
+            header3.textContent = database.projectArray[i].title;
+            const deleteButton = document.createElement("div");
+            deleteButton.classList.add("delete-button", "button");
+            deleteButton.textContent = "X";
+            deleteButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
+            projectTitle.append(header3, deleteButton);
+            //body section
+            const descDiv = document.createElement("div");
+            descDiv.textContent = database.projectArray[i].description;
+            const editButton = document.createElement("button");
+            editButton.classList.add("edit-button", "button");
+            editButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
+            editButton.textContent = "edit";
+            const completeButton = document.createElement("button");
+            completeButton.classList.add("complete-button", "button");
+            completeButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
+            completeButton.textContent = "complete";
+
+            projectItem.append(projectTitle, descDiv, editButton, completeButton);
+            allProjects.appendChild(projectItem);
+        }
+        content.appendChild(allProjects);
+}
+
+export {displayFullProject, displayAllToDos, displayAllProjects};

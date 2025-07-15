@@ -1,7 +1,7 @@
 import "./reset.css";
 import "./style.css";
 import { Database, ToDo, Project, statusListProject, statusListToDo } from "./objects";
-import { displayFullProject } from "./pages";
+import { displayFullProject, displayAllToDos, displayAllProjects } from "./pages";
 import { format, addDays } from "date-fns";
 
 
@@ -17,16 +17,60 @@ const newToDo = new ToDo(newDB, "test", "test desc", "new", "date", "low", "P000
 newToDo.title = "Redo";
 // newDB.todoArray.push(newToDo);
 newToDo.title = "Rerunnn";
-newToDo.projectID = "P000001";
+// newToDo.projectID = "P000001";
+
+loadSampleData(newDB);
+// displayFullProject(defaultProject);
+// displayAllToDos(newDB);
+displayAllProjects(newDB);
 
 
 
-// loadSampleData(newDB);
 console.log(newDB.projectArray);
 console.log(newDB.todoArray);
 // displayFullProject(newDB.projectArray[0]);
 
+document.addEventListener("click", (event) =>{
+    if (event.target.classList.contains("button")){
+        if(event.target.dataset.uid){
+            // console.log(event.target);
+            // const test = document.getElementById("view-projects");
+            // console.log(test);
+            // console.log(event.target.closest(".project"));
+            console.log("click");
+            const uID = event.target.dataset.uid;
+            ///All project uniqueIDs begin with P, Todos begin with T
+            let targetArray;
+            let targetElement;
+            if (uID.at(0)==="P") {
+                targetArray = newDB.projectArray;
+                targetElement = event.target.closest(".project");
+            }
+            else {
+                targetArray = newDB.todoArray;
+                targetElement = event.target.closest(".todo");
+            }
+            const filter = (element) => element.uniqueID == uID;
+            const targetObject = targetArray.find(filter);
+            
+            if (event.target.classList.contains("delete-button")){
+                const targetObjectIndex = targetArray.findIndex(filter);
+                targetArray.splice(targetObjectIndex, 1);
+                targetElement.remove();
+                console.log(newDB.projectArray);
+            }
+            else if (event.target.classList.contains("edit-button")){
 
+            }
+            else if (event.target.classList.contains("complete-button")){
+
+            }
+        } 
+        // switch(event.target.id){
+        //     case 
+        // }
+    }
+});
 
 
 
@@ -50,7 +94,8 @@ function loadSampleData(database){
         due = format(due, "MM/dd/yyyy");
         const priorityValues = ["high", "low"];
         let priority = priorityValues[Math.floor(Math.random() * 2)];
-        let project = database.projectArray[Math.floor(Math.random() * database.projectArray.length)].uniqueID;
+        // let project = database.projectArray[Math.floor(Math.random() * database.projectArray.length)].uniqueID;
+        let project = database.projectArray[0].uniqueID;
         let todo = new ToDo(database, title, desc, status, due, priority, project);
         // database.todoArray.push(todo);
     }
