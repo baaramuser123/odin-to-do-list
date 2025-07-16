@@ -81,6 +81,7 @@ class Project {
 
 const statusListProject = ["new", "in-progress", "done"];
 const statusListToDo = ["new", "in-progress", "done"];
+const priorityList = ["low", "high"];
 
 
-export {Database, ToDo, Project, statusListProject, statusListToDo};
+export {Database, ToDo, Project, statusListProject, statusListToDo, priorityList};

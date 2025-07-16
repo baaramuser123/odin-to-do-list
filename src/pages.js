@@ -142,10 +142,13 @@ function displayAllProjects(database){
     const projects = database.projectArray;
         for(let i = 0; i < projects.length; i++){
             const projectItem = document.createElement("div");
-            projectItem.classList.add("project");
+            projectItem.classList.add("project", "button");
+            projectItem.setAttribute("data-uid", database.projectArray[i].uniqueID);
+            if(projects[i].status == "done") projectItem.classList.add("completed");
             //title section
             const projectTitle = document.createElement("div");
-            projectTitle.classList.add("project-title");
+            projectTitle.classList.add("project-title", "button");
+            projectTitle.setAttribute("data-uid", database.projectArray[i].uniqueID);
             const header3 = document.createElement("h3");
             header3.textContent = database.projectArray[i].title;
             const deleteButton = document.createElement("div");
@@ -156,6 +159,8 @@ function displayAllProjects(database){
             //body section
             const descDiv = document.createElement("div");
             descDiv.textContent = database.projectArray[i].description;
+            descDiv.classList.add("button");
+            descDiv.setAttribute("data-uid", database.projectArray[i].uniqueID);
             const editButton = document.createElement("button");
             editButton.classList.add("edit-button", "button");
             editButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
