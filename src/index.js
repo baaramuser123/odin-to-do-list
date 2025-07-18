@@ -1,9 +1,9 @@
 import "./reset.css";
 import "./style.css";
 import { Database, ToDo, Project, statusListProject, statusListToDo, priorityList } from "./objects";
-import { displayFullProject, displayAllToDos, displayAllProjects } from "./pages";
+import { displayFullProject, displayAllToDos, displayAllProjects, displayNameChange} from "./pages";
 import { format, addDays } from "date-fns";
-
+import { createNewTodo } from "./buttons";
 
 // Initialize Page
 const newDB = new Database("test", "orange");
@@ -12,6 +12,10 @@ const defaultProject = new Project(newDB, "Unassigned", "Default Project for all
 
 //test
 const newToDo = new ToDo(newDB, "test", "test desc", "new", "date", "low", "P000000");
+
+displayNameChange(newDB);
+// const welcomeDialog = document.getElementById("name-change-dialog");
+// welcomeDialog.showModal();
 
 
 let lastDisplayFunction = displayAllToDos;
@@ -23,7 +27,8 @@ lastDisplayFunction(lastDisplayArg);
 console.log(newDB.projectArray);
 console.log(newDB.todoArray);
 // displayFullProject(newDB.projectArray[0]);
-let formInput = [];
+let objectCreationInput = {};
+let objectEditInput = [];
 
 document.addEventListener("click", (event) =>{
     if (event.target.classList.contains("button")){
@@ -64,8 +69,8 @@ document.addEventListener("click", (event) =>{
 
             else if (event.target.classList.contains("edit-button")){
                 //experimental
-                formInput = [];
-                formInput.push(targetObject);
+                objectEditInput = [];
+                objectEditInput.push(targetObject);
                 //experimental
                 const modal = document.getElementById(targetObjectType + "-edit");
                 const form = document.getElementById(targetObjectType + "-form");
@@ -89,7 +94,7 @@ document.addEventListener("click", (event) =>{
                             form.appendChild(select);
                         }
                         //experimental
-                        formInput.push(select);
+                        objectEditInput.push(select);
                         //experimental
                     }
                     else if (key == "priority"){
@@ -97,29 +102,29 @@ document.addEventListener("click", (event) =>{
                         select.setAttribute("name", key);
                         select.id = `edit-${targetObjectType}-${key}`;
                         for(let val in priorityList){
-                            const option = document.createElement("option");
-                            option.setAttribute("value", priorityList[val]);
-                            option.textContent = priorityList[val].toUpperCase();
-                            select.appendChild(option);
-                            select.value = targetObject[key];
-                            form.appendChild(select);
+                                const option = document.createElement("option");
+                                option.setAttribute("value", priorityList[val]);
+                                option.textContent = priorityList[val].toUpperCase();
+                                select.appendChild(option);
+                                select.value = targetObject[key];
+                                form.appendChild(select);
+                            }
+                            //experimental
+                            objectEditInput.push(select);
+                            //experimental
                         }
-                        //experimental
-                        formInput.push(select);
-                        //experimental
+                        else{
+                            const input = document.createElement("input");
+                            input.setAttribute("type", "text");
+                            input.setAttribute("name", key);
+                            input.id = `edit-${targetObjectType}-${key}`;
+                            input.defaultValue = targetObject[key];
+                            //experimental
+                            objectEditInput.push(input);
+                            //experimental
+                            form.appendChild(input);
+                        }
                     }
-                    else{
-                        const input = document.createElement("input");
-                        input.setAttribute("type", "text");
-                        input.setAttribute("name", key);
-                        input.id = `edit-${targetObjectType}-${key}`;
-                        input.defaultValue = targetObject[key];
-                        //experimental
-                        formInput.push(input);
-                        //experimental
-                        form.appendChild(input);
-                    }
-                }
                 const saveButton = document.createElement("button");
                 const cancelButton = document.createElement("button");
                 saveButton.textContent = "Save";
@@ -143,20 +148,52 @@ document.addEventListener("click", (event) =>{
                 lastDisplayFunction(lastDisplayArg);
             }
         } 
+        else if (event.target.classList.contains("owner")){
+            console.log("smiles");
+            displayNameChange(newDB);
+        }
         
     }
     else if (event.target.tagName == "BUTTON") {
         console.log("BUTTTTON CLICKED");
         switch(event.target.textContent){
             case "Save":{
-                const updateObject = formInput[0];
-                console.log("save clicked");
-                // console.log(formInput[0].title);
-                // console.log(formInput);
-                for(let i = 1; i<formInput.length; i++){
-                    updateObject[formInput[i].name] = formInput[i].value;
+                if (event.target.id == "save-new-project"){
+                    console.log(objectCreationInput);
+                    const newProject = new Project(newDB, objectCreationInput.title.value, objectCreationInput.description.value, objectCreationInput.status.value);
+                    if(lastDisplayFunction !== displayAllProjects){
+                        lastDisplayFunction = displayFullProject;
+                        lastDisplayArg = newProject;
+                    }
+                    lastDisplayFunction(lastDisplayArg);
                 }
-                lastDisplayFunction(lastDisplayArg);
+                else if (event.target.id == "save-new-todo"){
+                    console.log(objectCreationInput);
+                    const newTodo = new ToDo(newDB, objectCreationInput.title.value, objectCreationInput.description.value, objectCreationInput.status.value, objectCreationInput.dueDate.value, objectCreationInput.priority.value, objectCreationInput._projectID.value);
+                    // if(lastDisplayFunction !== displayAllProjects){
+                    //     lastDisplayFunction = displayFullProject;
+                    //     lastDisplayArg = newProject;
+                    // }
+                    lastDisplayFunction(lastDisplayArg);
+                }
+                else if (event.target.id == "save-owner-changes"){
+                    const nameEntry = document.getElementById("owner-name-entry");
+                    const colorEntry = document.getElementById("owner-color");
+                    newDB.ownerName = nameEntry.value;
+                    newDB.favColor = colorEntry.value;
+                    const nameElement = document.getElementById("owner-name");
+                    nameElement.textContent = newDB.ownerName;
+                }
+                else{
+                    const updateObject = objectEditInput[0];
+                    console.log("save clicked");
+                    // console.log(objectEditInput[0].title);
+                    // console.log(objectEditInput);
+                    for(let i = 1; i<objectEditInput.length; i++){
+                        updateObject[objectEditInput[i].name] = objectEditInput[i].value;
+                    }
+                    lastDisplayFunction(lastDisplayArg);
+                }
                 break;
             }
             case "Show All Projects":{
@@ -176,6 +213,84 @@ document.addEventListener("click", (event) =>{
                 loadSampleData(newDB);
                 lastDisplayFunction(lastDisplayArg);
                 break;
+            }
+            default:{
+                if(event.target.classList.contains("new-project")){
+                    objectCreationInput = {};
+                    // objectEditInput.push(targetObject);
+                    //experimental
+                    const modal = document.getElementById("project-edit");
+                    const form = document.getElementById("project-form");
+                    form.textContent = "";
+                    // let testObject = new Project(newDB, "test", "Test", "test");
+                    let testObject = new Project();
+                    let targetStatusList = statusListProject;
+                    for(let key in testObject){
+                        if(key == "uniqueID" || key == "todoArray" || key == "database") continue;
+                        const label = document.createElement("label");
+                        label.setAttribute("for", `edit-project-${key}`);
+                        label.textContent = key.toUpperCase() + ": ";
+                        form.appendChild(label);
+                        if(key == "status"){
+                            const select = document.createElement("select");
+                            select.setAttribute("name", key);
+                            select.id = `edit-project-${key}`;
+                            for(let stat in targetStatusList){
+                                const option = document.createElement("option");
+                                option.setAttribute("value", targetStatusList[stat]);
+                                option.textContent = targetStatusList[stat].toUpperCase();
+                                select.appendChild(option);
+                                // select.value = targetObject[key];
+                                form.appendChild(select);
+                            }
+                            //experimental
+                            // objectEditInput.push(select);
+                            objectCreationInput.status = select;
+                            //experimental
+                        }
+                        else if (key == "priority"){
+                            const select = document.createElement("select");
+                            select.setAttribute("name", key);
+                            select.id = `edit-project-${key}`;
+
+                            for(let val in priorityList){
+                                const option = document.createElement("option");
+                                option.setAttribute("value", priorityList[val]);
+                                option.textContent = priorityList[val].toUpperCase();
+                                select.appendChild(option);
+                                // select.value = targetObject[key];
+                                form.appendChild(select);
+                            }
+                            //experimental
+                            // objectEditInput.push(select);
+                            objectCreationInput.priority = select;
+                            //experimental
+                        }
+                        else{
+                            const input = document.createElement("input");
+                            input.setAttribute("type", "text");
+                            input.setAttribute("name", key);
+                            input.id = `edit-project-${key}`;
+                            //experimental
+                            // objectEditInput.push(input);
+                            objectCreationInput[key] = input;
+                            //experimental
+                            form.appendChild(input);
+                        }
+                    }
+                    const saveButton = document.createElement("button");
+                    const cancelButton = document.createElement("button");
+                    saveButton.textContent = "Save";
+                    saveButton.id = "save-new-project";
+                    cancelButton.textContent = "Cancel";
+                    form.append(cancelButton, saveButton);
+                    //pop up modal to make changes
+                    modal.showModal();
+                }
+                else if (event.target.classList.contains("newTodo")){
+                    console.log("click");
+                    objectCreationInput = createNewTodo(event, newDB.projectArray);
+                }
             }
         }
     }

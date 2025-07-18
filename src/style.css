@@ -1,6 +1,5 @@
 :root {
     --chosen-color-main: #cc930f;
-
     /* --chosen-color-main: rgb(249, 225, 168); */
     --chosen-color-dull: rgb(255, 248, 213);
     --nav-color: whitesmoke;
@@ -53,7 +52,7 @@ header {
 }
 
 #new-project-button {
-    background-color: green;
+    background-color: rgb(34, 34, 34);
     width: auto;
     height: auto;
     color: var(--nav-color);
@@ -66,7 +65,7 @@ header {
 }
 
 #new-project-button:hover {
-    background-color: hsl(120, 100%, 20%);
+    background-color: var(--chosen-color-main);
 }
 
 #profile-bundle{
@@ -220,7 +219,7 @@ header {
     background-color: transparent;
     color: var(--chosen-color-main);
     /* margin-top: 1em; */
-    width: 100%;
+    width: 90%;
     height: 3em;
     border: none;
     font-size: 1.25em;
@@ -321,7 +320,7 @@ header {
    text-decoration: line-through;
  }
 
- #project-edit, #todo-edit{
+ #project-edit, #todo-edit, #name-change-dialog{
    justify-self: center;
    align-self: center;
    font-size: 1.5rem;
@@ -339,4 +338,14 @@ header {
    font-size: 0.75em;
    gap: 1em;
    font-weight: 300;
+ }
+
+ #name-change-dialog::backdrop {
+   background-color: var(--nav-color);
+ }
+
+ #save-owner-changes {
+   width: 100%;
+   justify-content: start;
+   margin-top: 1em;
  }

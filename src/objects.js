@@ -1,7 +1,55 @@
 class Database {
     constructor(name, color){
         this.ownerName = name;
-        this.favColor = color;
+        this._favColor = color;
+    }
+
+    get favColor(){
+        return this._favColor;
+    }
+
+    set favColor(color){
+        const root = document.querySelector(':root');
+        switch(color){
+            case "blue":{
+                root.style.setProperty('--chosen-color-main', '#34699A');
+                root.style.setProperty('--chosen-color-dull', '#aacbe9ff');
+                break;
+            }
+            case "orange":{
+                root.style.setProperty('--chosen-color-main', '#cc930f');
+                root.style.setProperty('--chosen-color-dull', '#fff8d5');
+                break;
+            }
+            case "green":{
+                root.style.setProperty('--chosen-color-main', '#5E936C');
+                root.style.setProperty('--chosen-color-dull', '#E8FFD7');
+                break;
+            }
+            case "red":{
+                root.style.setProperty('--chosen-color-main', '#a73c3cff');
+                root.style.setProperty('--chosen-color-dull', '#ffb4b4ff');
+                break;
+            }
+            case "pink":{
+                // '#F564A9'
+                root.style.setProperty('--chosen-color-main', '#ce528eff');
+                root.style.setProperty('--chosen-color-dull', '#ffdcdcff');
+                break;
+            }
+            case "purple":{
+                root.style.setProperty('--chosen-color-main', '#7F55B1');
+                root.style.setProperty('--chosen-color-dull', '#bba3d8ff');
+                break;
+            }
+            case "slate":{
+                root.style.setProperty('--chosen-color-main', '#6b6b6bff');
+                root.style.setProperty('--chosen-color-dull', '#e0e0e0ff');
+                break;
+            }
+            default:
+        }
+        this._favColor = color;
     }
 
     projectArray = [];
@@ -21,7 +69,7 @@ class ToDo {
         this.database = database;
         this.projectID=project;
         ToDo.counter++;
-        database.todoArray.push(this);
+        if(database) database.todoArray.push(this);
     }
 
     static counter = 0;
@@ -45,8 +93,11 @@ class ToDo {
         }
         this._projectID = value;
         const projFilter2 = (element) => element.uniqueID == this._projectID;
-        const newProject = this.database.projectArray.find(projFilter2);
-        newProject.todoArray.push(this);
+        //added
+        if(this.database) {
+            const newProject = this.database.projectArray.find(projFilter2);
+            newProject.todoArray.push(this);
+        }
     }
 }
 
@@ -57,7 +108,7 @@ class Project {
         this.description=description;
         this.status=status;
         Project.counter++;
-        database.projectArray.push(this);
+        if(database) database.projectArray.push(this);
     }
 
 

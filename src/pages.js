@@ -31,8 +31,9 @@ function displayFullProject(project){
     const statusColumns = document.createElement("div");
     statusColumns.id = "status-columns";
     const newButton = document.createElement("button");
-    newButton.classList.add("newTodo", "button");
+    newButton.classList.add("newTodo");
     newButton.textContent = "+ Create New";
+    newButton.setAttribute("data-project_id", project.uniqueID);
     for(let i = 0; i < statusListToDo.length; i++){
         const statusDiv = document.createElement("div");
         statusDiv.id = statusListToDo[i].toLowerCase();
@@ -70,7 +71,13 @@ function displayFullProject(project){
             completeButton.setAttribute("data-uid", matchingTodos[k].uniqueID);
             completeButton.textContent = "complete";
 
-            todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            if(matchingTodos[k].status == "done"){
+                todoItem.classList.add("completed");
+                todoItem.append(todoTitle, descDiv, editButton);
+            }
+            else{
+                todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            }
             statusDiv.appendChild(todoItem);
 
         }
@@ -89,7 +96,7 @@ function displayAllToDos(database){
     allTodo.id = "all-todo";
     allTodo.classList.add("grid-general");
     const newButton = document.createElement("button");
-    newButton.classList.add("newTodo", "button");
+    newButton.classList.add("newTodo");
     newButton.textContent = "+ Create New";
     newButton.setAttribute("data-status", "new");
     allTodo.appendChild(newButton);
@@ -119,11 +126,18 @@ function displayAllToDos(database){
             completeButton.classList.add("complete-button", "button");
             completeButton.setAttribute("data-uid", database.todoArray[i].uniqueID);
             completeButton.textContent = "complete";
-
-            todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            if(matchingTodos[i].status == "done"){
+                todoItem.classList.add("completed");
+                todoItem.append(todoTitle, descDiv, editButton);
+            }
+            else{
+                todoItem.append(todoTitle, descDiv, editButton, completeButton);
+            }
             allTodo.appendChild(todoItem);
         }
-        content.appendChild(allTodo);
+    const header1 = document.createElement("h1");
+    header1.textContent = "All ToDos";
+    content.append(header1, allTodo);
 }
 
 
@@ -134,7 +148,7 @@ function displayAllProjects(database){
     allProjects.id = "all-projects";
     allProjects.classList.add("grid-general");
     const newButton = document.createElement("button");
-    newButton.classList.add("new-project", "button");
+    newButton.classList.add("new-project");
     newButton.textContent = "+ Create New";
     newButton.setAttribute("data-status", "new");
     allProjects.appendChild(newButton);
@@ -151,6 +165,8 @@ function displayAllProjects(database){
             projectTitle.setAttribute("data-uid", database.projectArray[i].uniqueID);
             const header3 = document.createElement("h3");
             header3.textContent = database.projectArray[i].title;
+            header3.classList.add("button");
+            header3.setAttribute("data-uid", database.projectArray[i].uniqueID);
             const deleteButton = document.createElement("div");
             deleteButton.classList.add("delete-button", "button");
             deleteButton.textContent = "X";
@@ -173,7 +189,20 @@ function displayAllProjects(database){
             projectItem.append(projectTitle, descDiv, editButton, completeButton);
             allProjects.appendChild(projectItem);
         }
-        content.appendChild(allProjects);
+    const header1 = document.createElement("h1");
+    header1.textContent = "All Projects";
+    content.append(header1, allProjects);
 }
 
-export {displayFullProject, displayAllToDos, displayAllProjects};
+function displayNameChange(database){
+    const nameModal = document.getElementById("name-change-dialog");
+    // const nameForm = document.getElementById("name-change-form");
+    const nameEntry = document.getElementById("owner-name-entry");
+    const colorEntry = document.getElementById("owner-color");
+    // const formInput = [];
+    nameEntry.value = database.ownerName;
+    colorEntry.value = database.favColor;
+    nameModal.showModal();
+}
+
+export {displayFullProject, displayAllToDos, displayAllProjects, displayNameChange};
