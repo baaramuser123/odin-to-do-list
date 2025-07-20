@@ -6,19 +6,20 @@ import { format, addDays } from "date-fns";
 import { createNewTodo } from "./buttons";
 
 // Initialize Page
-const newDB = new Database("test", "orange");
+const newDB = new Database("Your Name", "orange");
 const defaultProject = new Project(newDB, "Unassigned", "Default Project for all unassigned ToDos","N/A");
 
 
 //test
-const newToDo = new ToDo(newDB, "test", "test desc", "new", "date", "low", "P000000");
+// let testdate = format(new Date(), "yyyy-MM-dd");
+// const newToDo = new ToDo(newDB, "test", "test desc", "new", testdate, "low", "P000000");
 
 displayNameChange(newDB);
 // const welcomeDialog = document.getElementById("name-change-dialog");
 // welcomeDialog.showModal();
 
 
-let lastDisplayFunction = displayAllToDos;
+let lastDisplayFunction = displayAllProjects;
 let lastDisplayArg = newDB;
 lastDisplayFunction(lastDisplayArg);
 
@@ -38,7 +39,7 @@ document.addEventListener("click", (event) =>{
             // const test = document.getElementById("view-projects");
             // console.log(test);
             // console.log(event.target.closest(".project"));
-            console.log("click");
+            console.log("click dataset");
             const uID = event.target.dataset.uid;
             ///All project uniqueIDs begin with P, Todos begin with T
             let targetArray;
@@ -97,6 +98,18 @@ document.addEventListener("click", (event) =>{
                         objectEditInput.push(select);
                         //experimental
                     }
+                    else if(key == "description"){
+                        const input = document.createElement("textarea");
+                        input.setAttribute("rows", "5");
+                        input.setAttribute("cols", "50");
+                        input.setAttribute("name", key);
+                        input.id = `edit-${targetObjectType}-${key}`;
+                        input.defaultValue = targetObject[key];
+                        //experimental
+                        objectEditInput.push(input);
+                        //experimental
+                        form.appendChild(input); 
+                    }
                     else if (key == "priority"){
                         const select = document.createElement("select");
                         select.setAttribute("name", key);
@@ -108,23 +121,56 @@ document.addEventListener("click", (event) =>{
                                 select.appendChild(option);
                                 select.value = targetObject[key];
                                 form.appendChild(select);
-                            }
-                            //experimental
-                            objectEditInput.push(select);
-                            //experimental
                         }
-                        else{
-                            const input = document.createElement("input");
-                            input.setAttribute("type", "text");
-                            input.setAttribute("name", key);
-                            input.id = `edit-${targetObjectType}-${key}`;
-                            input.defaultValue = targetObject[key];
-                            //experimental
-                            objectEditInput.push(input);
-                            //experimental
-                            form.appendChild(input);
-                        }
+                        //experimental
+                        objectEditInput.push(select);
+                        //experimental
                     }
+                    else if (key == "dueDate"){
+
+                        const input = document.createElement("input");
+                        input.setAttribute("type", "date");
+                        input.setAttribute("name", key);
+                        input.id = `edit-${targetObjectType}-${key}`;
+                        input.defaultValue = targetObject[key];
+                        //experimental
+                        objectEditInput.push(input);
+                        //experimental
+                        form.appendChild(input);
+
+                    }
+                    else if (key == "_projectID"){
+                        label.textContent = "PROJECT: ";
+                        const select = document.createElement("select");
+                        select.setAttribute("name", "projectID");
+                        select.id = `edit-todo-projectID`;
+                        for(let i =0; i<newDB.projectArray.length; i++){
+                            const option = document.createElement("option");
+                            option.setAttribute("value", newDB.projectArray[i].uniqueID);
+                            option.textContent = newDB.projectArray[i].title.toUpperCase();
+                            select.appendChild(option);
+                            //default project assignment if available
+                            if(targetObject[key]){
+                                select.value = targetObject[key];
+                            }
+                        }
+                        form.appendChild(select);
+                        //experimental
+                        objectEditInput.push(select);
+
+                    }
+                    else{
+                        const input = document.createElement("input");
+                        input.setAttribute("type", "text");
+                        input.setAttribute("name", key);
+                        input.id = `edit-${targetObjectType}-${key}`;
+                        input.defaultValue = targetObject[key];
+                        //experimental
+                        objectEditInput.push(input);
+                        //experimental
+                        form.appendChild(input);
+                    }
+                }
                 const saveButton = document.createElement("button");
                 const cancelButton = document.createElement("button");
                 saveButton.textContent = "Save";
@@ -138,6 +184,9 @@ document.addEventListener("click", (event) =>{
                 targetElement.classList.add("completed");
                 targetObject.status = "done";
                 event.target.remove();
+                if(lastDisplayFunction==displayFullProject){
+                    lastDisplayFunction(lastDisplayArg);
+                }
             }
             // else if (event.target.classList.contains("project")){
             //     displayFullProject(targetObject);
@@ -208,6 +257,12 @@ document.addEventListener("click", (event) =>{
                 lastDisplayFunction(lastDisplayArg);
                 break;
             }
+            case "Unassigned ToDos":{
+                lastDisplayFunction = displayFullProject;
+                lastDisplayArg = newDB.projectArray[0];
+                lastDisplayFunction(lastDisplayArg);
+                break;
+            }
             case "Load Demo Data":{
                 console.log("sample data incoming");
                 loadSampleData(newDB);
@@ -266,6 +321,17 @@ document.addEventListener("click", (event) =>{
                             objectCreationInput.priority = select;
                             //experimental
                         }
+                        else if(key == "description"){
+                            const input = document.createElement("textarea");
+                            input.setAttribute("rows", "5");
+                            input.setAttribute("cols", "50");
+                            input.setAttribute("name", key);
+                            input.id = `edit-project-${key}`;
+                            //experimental
+                            objectCreationInput.description=input;
+                            //experimental
+                            form.appendChild(input); 
+                        }
                         else{
                             const input = document.createElement("input");
                             input.setAttribute("type", "text");
@@ -301,7 +367,6 @@ document.addEventListener("click", (event) =>{
 
 
 function loadSampleData(database){
-
     for(let i = 1; i < 9; i++){
         let pTitle = "Project " + i;
         let desc = "Generic description"
@@ -315,11 +380,11 @@ function loadSampleData(database){
         let desc = "Generic description";
         let status = statusListToDo[Math.floor(Math.random() * statusListToDo.length)];
         let due = addDays(new Date(), Math.floor(Math.random() * 60));
-        due = format(due, "MM/dd/yyyy");
+        due = format(due, "yyyy-MM-dd");
         const priorityValues = ["high", "low"];
         let priority = priorityValues[Math.floor(Math.random() * 2)];
-        // let project = database.projectArray[Math.floor(Math.random() * database.projectArray.length)].uniqueID;
-        let project = database.projectArray[0].uniqueID;
+        let project = database.projectArray[Math.floor(Math.random() * database.projectArray.length)].uniqueID;
+        // let project = database.projectArray[0].uniqueID;
         let todo = new ToDo(database, title, desc, status, due, priority, project);
         // database.todoArray.push(todo);
     }

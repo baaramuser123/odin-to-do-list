@@ -1,3 +1,5 @@
+// import { JavascriptModulesPlugin } from "webpack";
+import { format } from "date-fns";
 import { ToDo, statusListToDo, priorityList } from "./objects";
 export {createNewTodo};
 
@@ -56,6 +58,7 @@ function createNewTodo(event, projectArray){
             //experimental
         }
         else if (key == "_projectID"){
+            label.textContent = "PROJECT: ";
             const select = document.createElement("select");
             select.setAttribute("name", key);
             select.id = `edit-todo-projectID`;
@@ -74,6 +77,29 @@ function createNewTodo(event, projectArray){
             // objectEditInput.push(select);
             objectCreationInput._projectID = select;
 
+        }
+        else if (key == "dueDate"){
+            const input = document.createElement("input");
+            input.setAttribute("type", "date");
+            input.setAttribute("name", key);
+            input.id = `edit-todo-${key}`;
+            input.value = format(new Date(), "yyyy-MM-dd");
+            //experimental
+            // objectEditInput.push(input);
+            objectCreationInput[key] = input;
+            //experimental
+            form.appendChild(input);
+        }
+        else if(key == "description"){
+            const input = document.createElement("textarea");
+            input.setAttribute("rows", "5");
+            input.setAttribute("cols", "50");
+            input.setAttribute("name", key);
+            input.id = `edit-todo-${key}`;
+            //experimental
+            objectCreationInput[key]=input;
+            //experimental
+            form.appendChild(input); 
         }
         else{
             const input = document.createElement("input");

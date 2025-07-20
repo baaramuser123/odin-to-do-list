@@ -3,6 +3,7 @@
     /* --chosen-color-main: rgb(249, 225, 168); */
     --chosen-color-dull: rgb(255, 248, 213);
     --nav-color: whitesmoke;
+    --background: url(./assets/geometric-leaves.webp);
 }
 
 
@@ -43,7 +44,8 @@ header {
     align-items: center;
     font-size: 1.25em;
     padding: 10px;
-    background-color: var(--nav-color);
+    background-image: var(--background);
+    /* background-color: var(--nav-color); */
 }
 
 #title {
@@ -140,9 +142,31 @@ header {
     grid-template-columns: 1fr max-content 1fr max-content 1fr;
 }
 
+#project-full-edit {
+   background-color: transparent;
+   color: var(--nav-color);
+   font-size: 1.25em;
+   width: max-content;
+   padding: 0 1em;
+   justify-self: center;
+   border-color: var(--nav-color);
+   border-radius: 0.5em;
+   grid-row: 1/2;
+   grid-column: 5/6;
+}
+
+#project-full-edit:hover {
+   background-color: var(--chosen-color-dull);
+   color: black;
+}
+
 #desc, #project-header>h1 {
-    grid-column: 1/6;
+    grid-column: 3/4;
     
+}
+#desc {
+   word-wrap: break-word;
+  word-break: break-all;
 }
 
  #project-header>h1 {
@@ -236,6 +260,7 @@ header {
  .todo, .project {
     display: grid;
     min-height: 200px;
+    max-height: 250px;
     grid-template-rows: max-content 1fr;
     background-color: var(--nav-color);
     gap: 1em;
@@ -247,7 +272,12 @@ header {
     padding: 10px;
     transform: rotate(0deg);
     text-align: start;
+    word-wrap: break-word;
+    word-break: break-all;
 
+ }
+ .project>*, .todo>*{
+   overflow: hidden;
  }
 
  .todo:hover, .project:hover {
@@ -265,7 +295,7 @@ header {
     justify-content: space-between;
  }
 
- .edit-button {
+ .project .edit-button, .todo .edit-button {
     border-top: 2px solid white;
     border-right: 1px solid white;
     border-bottom: 0px;
@@ -341,7 +371,8 @@ header {
  }
 
  #name-change-dialog::backdrop {
-   background-color: var(--nav-color);
+   background-image: var(--background);
+   /* background-color: var(--nav-color); */
  }
 
  #save-owner-changes {

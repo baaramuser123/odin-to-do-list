@@ -25,7 +25,17 @@ function displayFullProject(project){
     const closed = document.createElement("div");
     closed.classList.add("col2");
     closed.textContent = `ToDos Completed: ${project.completedToDos}`;
+    //experimental
+    if(project.uniqueID !== "P000000"){
+        const editButton = document.createElement("button");
+        editButton.classList.add("edit-button", "button");
+        editButton.setAttribute("data-uid", project.uniqueID);
+        editButton.textContent = "edit";
+        editButton.id = "project-full-edit"
+        header.appendChild(editButton);
+    }
     header.append(title, description, status, uID, open, closed);
+    
 
     // Status Columns
     const statusColumns = document.createElement("div");
@@ -154,7 +164,7 @@ function displayAllProjects(database){
     allProjects.appendChild(newButton);
 
     const projects = database.projectArray;
-        for(let i = 0; i < projects.length; i++){
+        for(let i = 1; i < projects.length; i++){
             const projectItem = document.createElement("div");
             projectItem.classList.add("project", "button");
             projectItem.setAttribute("data-uid", database.projectArray[i].uniqueID);
@@ -181,12 +191,15 @@ function displayAllProjects(database){
             editButton.classList.add("edit-button", "button");
             editButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
             editButton.textContent = "edit";
-            const completeButton = document.createElement("button");
-            completeButton.classList.add("complete-button", "button");
-            completeButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
-            completeButton.textContent = "complete";
 
-            projectItem.append(projectTitle, descDiv, editButton, completeButton);
+            projectItem.append(projectTitle, descDiv, editButton);
+            if(projects[i].status !== "done"){
+                const completeButton = document.createElement("button");
+                completeButton.classList.add("complete-button", "button");
+                completeButton.setAttribute("data-uid", database.projectArray[i].uniqueID);
+                completeButton.textContent = "complete";
+                projectItem.appendChild(completeButton);
+            }
             allProjects.appendChild(projectItem);
         }
     const header1 = document.createElement("h1");
