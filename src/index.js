@@ -62,9 +62,13 @@ document.addEventListener("click", (event) =>{
             const targetObject = targetArray.find(filter);
             
             if (event.target.classList.contains("delete-button")){
+                if(targetObjectType == "todo"){
+                    targetObject.projectID = "";
+                }
                 const targetObjectIndex = targetArray.findIndex(filter);
                 targetArray.splice(targetObjectIndex, 1);
                 targetElement.remove();
+                
                 console.log(newDB.projectArray);
             }
 

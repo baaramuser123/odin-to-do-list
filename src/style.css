@@ -254,7 +254,7 @@ header {
 
 
  .newTodo:hover, .new-project:hover {
-    transform: scale(1.05);
+    transform: scale(1.025);
  }
 
  .todo, .project {
@@ -281,7 +281,7 @@ header {
  }
 
  .todo:hover, .project:hover {
-    transform: scale(1.05);
+    transform: scale(1.025);
  }
 
  .todo>* , .project>*{

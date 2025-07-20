@@ -94,7 +94,7 @@ class ToDo {
         this._projectID = value;
         const projFilter2 = (element) => element.uniqueID == this._projectID;
         //added
-        if(this.database) {
+        if(this.database && value!=="") {
             const newProject = this.database.projectArray.find(projFilter2);
             newProject.todoArray.push(this);
         }
