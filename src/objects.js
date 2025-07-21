@@ -1,3 +1,4 @@
+
 class Database {
     constructor(name, color){
         this.ownerName = name;
@@ -85,8 +86,10 @@ class ToDo {
     set projectID(value){
         //remove todo from prior project attachment
         if(this._projectID !== undefined && this._projectID !== null){
+            console.log("cleaning old project");
             const projFilter = (element) => element.uniqueID == this._projectID;
             const originalProject = this.database.projectArray.find(projFilter);
+            console.log("project found named " +originalProject.title);
             const todoFilter = (element) => element === this;
             const todotoremove = originalProject.todoArray.findIndex(todoFilter);
             originalProject.todoArray.splice(todotoremove,1);

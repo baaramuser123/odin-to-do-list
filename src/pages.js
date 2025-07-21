@@ -96,6 +96,7 @@ function displayFullProject(project){
     }
     //end for loops
     content.append(header, statusColumns);
+    console.log(project);
 }
 
 

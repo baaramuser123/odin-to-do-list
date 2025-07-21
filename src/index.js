@@ -4,32 +4,37 @@ import { Database, ToDo, Project, statusListProject, statusListToDo, priorityLis
 import { displayFullProject, displayAllToDos, displayAllProjects, displayNameChange} from "./pages";
 import { format, addDays } from "date-fns";
 import { createNewTodo } from "./buttons";
+import "./cycle";
 
 // Initialize Page
-const newDB = new Database("Your Name", "orange");
-const defaultProject = new Project(newDB, "Unassigned", "Default Project for all unassigned ToDos","N/A");
+let newDB;
+if(!localStorage.getItem("database")){
+    newDB = new Database("Your Name", "orange");
+    const defaultProject = new Project(newDB, "Unassigned", "Default Project for all unassigned ToDos","N/A");
 
-
-//test
-// let testdate = format(new Date(), "yyyy-MM-dd");
-// const newToDo = new ToDo(newDB, "test", "test desc", "new", testdate, "low", "P000000");
-
-displayNameChange(newDB);
-// const welcomeDialog = document.getElementById("name-change-dialog");
-// welcomeDialog.showModal();
-
+    displayNameChange(newDB);
+}
+else{
+    newDB = JSON.retrocycle(JSON.parse(localStorage.getItem("database")));
+    Project.counter = localStorage.getItem("projectCounter");
+    ToDo.counter = localStorage.getItem("todoCounter");
+    Object.setPrototypeOf(newDB, Database.prototype);
+    newDB.favColor = newDB._favColor;
+    const nameElement = document.getElementById("owner-name");
+    nameElement.textContent = newDB.ownerName;
+}
 
 let lastDisplayFunction = displayAllProjects;
 let lastDisplayArg = newDB;
 lastDisplayFunction(lastDisplayArg);
-
-
-
-console.log(newDB.projectArray);
-console.log(newDB.todoArray);
-// displayFullProject(newDB.projectArray[0]);
 let objectCreationInput = {};
 let objectEditInput = [];
+
+function saveToLocal(){
+    localStorage.setItem("database", JSON.stringify(JSON.decycle(newDB)));
+    localStorage.setItem("projectCounter", Project.counter);
+    localStorage.setItem("todoCounter", ToDo.counter);
+}
 
 document.addEventListener("click", (event) =>{
     if (event.target.classList.contains("button")){
@@ -39,7 +44,7 @@ document.addEventListener("click", (event) =>{
             // const test = document.getElementById("view-projects");
             // console.log(test);
             // console.log(event.target.closest(".project"));
-            console.log("click dataset");
+            // console.log("click dataset");
             const uID = event.target.dataset.uid;
             ///All project uniqueIDs begin with P, Todos begin with T
             let targetArray;
@@ -68,8 +73,8 @@ document.addEventListener("click", (event) =>{
                 const targetObjectIndex = targetArray.findIndex(filter);
                 targetArray.splice(targetObjectIndex, 1);
                 targetElement.remove();
-                
-                console.log(newDB.projectArray);
+                saveToLocal();
+                // console.log(newDB.projectArray);
             }
 
             else if (event.target.classList.contains("edit-button")){
@@ -202,17 +207,17 @@ document.addEventListener("click", (event) =>{
             }
         } 
         else if (event.target.classList.contains("owner")){
-            console.log("smiles");
+            // console.log("smiles");
             displayNameChange(newDB);
         }
         
     }
     else if (event.target.tagName == "BUTTON") {
-        console.log("BUTTTTON CLICKED");
+        // console.log("BUTTTTON CLICKED");
         switch(event.target.textContent){
             case "Save":{
                 if (event.target.id == "save-new-project"){
-                    console.log(objectCreationInput);
+                    // console.log(objectCreationInput);
                     const newProject = new Project(newDB, objectCreationInput.title.value, objectCreationInput.description.value, objectCreationInput.status.value);
                     if(lastDisplayFunction !== displayAllProjects){
                         lastDisplayFunction = displayFullProject;
@@ -221,7 +226,7 @@ document.addEventListener("click", (event) =>{
                     lastDisplayFunction(lastDisplayArg);
                 }
                 else if (event.target.id == "save-new-todo"){
-                    console.log(objectCreationInput);
+                    // console.log(objectCreationInput);
                     const newTodo = new ToDo(newDB, objectCreationInput.title.value, objectCreationInput.description.value, objectCreationInput.status.value, objectCreationInput.dueDate.value, objectCreationInput.priority.value, objectCreationInput._projectID.value);
                     // if(lastDisplayFunction !== displayAllProjects){
                     //     lastDisplayFunction = displayFullProject;
@@ -239,7 +244,7 @@ document.addEventListener("click", (event) =>{
                 }
                 else{
                     const updateObject = objectEditInput[0];
-                    console.log("save clicked");
+                    // console.log("save clicked");
                     // console.log(objectEditInput[0].title);
                     // console.log(objectEditInput);
                     for(let i = 1; i<objectEditInput.length; i++){
@@ -247,6 +252,9 @@ document.addEventListener("click", (event) =>{
                     }
                     lastDisplayFunction(lastDisplayArg);
                 }
+                saveToLocal();
+                
+
                 break;
             }
             case "Show All Projects":{
@@ -268,7 +276,7 @@ document.addEventListener("click", (event) =>{
                 break;
             }
             case "Load Demo Data":{
-                console.log("sample data incoming");
+                // console.log("sample data incoming");
                 loadSampleData(newDB);
                 lastDisplayFunction(lastDisplayArg);
                 break;
@@ -358,7 +366,7 @@ document.addEventListener("click", (event) =>{
                     modal.showModal();
                 }
                 else if (event.target.classList.contains("newTodo")){
-                    console.log("click");
+                    // console.log("click");
                     objectCreationInput = createNewTodo(event, newDB.projectArray);
                 }
             }
@@ -392,4 +400,5 @@ function loadSampleData(database){
         let todo = new ToDo(database, title, desc, status, due, priority, project);
         // database.todoArray.push(todo);
     }
+    console.log(newDB);
 }
