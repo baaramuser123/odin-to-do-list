@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo App</title>
+<script defer src="main.js"></script></head>
+<body>
+<div id="container">
+    <header>
+        <div id="title">ToDo App</div>
+        <button id="new-project-button" class="new-project">+ New Project</button>
+        <div id="profile-bundle">
+            <div id="owner-name">Your Name</div>
+            <div id="owner-icon">
+                <svg class="button owner"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <path class="button owner" d="M50,26.1 C50,39.4 39.2448133,50.2 26,50.2 C12.7551867,50.2 2,39.4 2,26.1 C2,12.8 12.7551867,2 26,2 C39.2448133,2 50,12.8 50,26.1 Z M17,15 C15.3255814,15 14,16.7674419 14,19 C14,21.2325581 15.3255814,23 17,23 C18.6744186,23 20,21.2325581 20,19 C20,16.7674419 18.6744186,15 17,15 Z M35,15 C33.3255814,15 32,16.7674419 32,19 C32,21.2325581 33.3255814,23 35,23 C36.6744186,23 38,21.2325581 38,19 C38,16.7674419 36.6744186,15 35,15 Z M11,29 C11.6320591,36.6439458 17.1578483,43 25.9212267,43 C34.684605,43 40.3679409,36.6439458 41,29 C38.1939694,29 33.1939694,29 26,29 C18.8060306,29 13.8060306,29 11,29 Z"/>
+                </svg>
+            </div>
+            <!-- <button class="button dull-color">Change Color</button> -->
+            <!-- <button class="button">Change Name</button> -->
+        </div>
+    </header>
+    <div id="sidebar" class="main-color">
+        <button id="view-projects">Show All Projects</button>
+        <button id="view-unassigned">Unassigned ToDos</button>
+        <button id="view-todos">Show All ToDos</button>
+        <button id="demo-data-button">Load Demo Data</button>
+    </div>
+    <div id="content-wrapper" class="dull-color">
+        <div id="content" class="dull-color">
+
+            <!--  -->
+            <!-- Display All ToDos -->
+            <!--  -->
+            <!-- <div id="all-todo" class="grid-general">  
+                <button class="newTodo" data-status="new">+ Create New</button>
+                <div class="todo">
+                    <div class="todo-title">
+                        <h3>Test Todo</h3>
+                        <div class="delete-button" data-uid="test123">X</div>
+                    </div>
+                    <div>Some pretty text, lalalalalalala!!!!</div>
+                    <button class="edit-button" data-uid="test123">edit</button>
+                    <button class="complete-button" data-uid="test123">complete</button>
+                </div>
+            </div> -->
+
+            <!--                 -->
+            <!-- Display Project -->
+            <!--                 -->
+            <!-- <div id="project-header">
+                <h1>Unassigned</h1>
+                <div id="desc">Description: blahdlskfja;kdfj;asljf;lasdjfl;asdkflasdjf dskljf;la jfl;sdkjflkkjas;d fjldas; flasdj fl;sd fjlsdjf l;asdfj;asdfj ;asl f;lsdfjk asdl;f jasd;lff ;</div>
+                <div class="col1">Status: Open</div>
+                <div class="col2">UniqueID: ldj;afjl;dsa</div>
+                <div class="col1">ToDos Open: 5</div>
+                <div class="col2">ToDos Completed: 3</div>
+            </div>
+            <div id="status-columns">
+                <div id="new">
+                    <h2>New</h2>
+                    <button class="newTodo" data-status="new">+ Create New</button>
+                    <div class="todo">
+                        <div class="todo-title">
+                            <h3>Test Todo</h3>
+                            <div class="delete-button" data-uid="test123">X</div>
+                        </div>
+                        <div>Some pretty text, lalalalalalala!!!!</div>
+                        <button class="edit-button" data-uid="test123">edit</button>
+                        <button class="complete-button" data-uid="test123">complete</button>
+                    </div>
+                </div>
+                <div id="in-progress">
+                    <h2>In-Progress</h2>
+                    <button class="newTodo" data-status="in-progress">+ Create New</button>
+                </div>
+                <div id="done">
+                    <h2>Done</h2>
+                    <button class="newTodo" data-status="done">+ Create New</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <dialog id="project-edit">
+        <p>Project Edit</p>
+        <form id="project-form" method="dialog">
+        
+        </form>
+    </dialog>
+    <dialog id="todo-edit">
+        <p>Todo Edit</p>
+        <form id="todo-form" method="dialog">
+        
+        </form>
+    </dialog>
+    <dialog id="name-change-dialog">
+        <h1>Welcome to the ToDo App!</h1>
+        <br>
+        <p>Please enter your name and desired color. <br>(Use the Smiley Face to change your choices later)</p>
+        <br>
+        <form id="name-change-form" method="dialog">
+            <label for="owner-name-entry">Name: </label>
+            <input type="text" name="owner-name-entry" id="owner-name-entry">
+            <label for="owner-color">Theme Color: </label>
+            <select name="owner-color" id="owner-color">
+                <option value="slate">Slate</option>
+                <option value="red">Red</option>
+                <option value="orange">Orange</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="purple">Purple</option>
+                <option value="pink">Pink</option>
+            </select>
+            <br>
+            <button id="save-owner-changes">Save</button>
+        </form>
+    </dialog>
+</div>
+</body>
+</html>
